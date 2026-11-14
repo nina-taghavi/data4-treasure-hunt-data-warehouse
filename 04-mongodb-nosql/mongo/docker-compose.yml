@@ -1,0 +1,87 @@
+services:
+    # ---------------- MONGODB SHARDED CLUSTER ----------------
+    # 1. Config Server
+    mongo-config:
+        container_name: mongo-config
+        image: mongo:8.0
+        command: mongod --configsvr --replSet configRS --bind_ip_all --port 27019
+        ports:
+            - "27019:27019"
+        networks:
+            - data4-components
+        volumes:
+            - ./mongo-data/config:/data/configdb
+
+    # 2. Mongos Router (Stateless, no volume needed)
+    mongo-router:
+        container_name: mongo-router
+        image: mongo:8.0
+        command: mongos --configdb configRS/mongo-config:27019 --bind_ip_all --port 27017
+        ports:
+            - "27017:27017"
+        depends_on:
+            - mongo-config
+        networks:
+            - data4-components
+
+    # 3. Shard 1
+    mongo-shard1-a:
+        container_name: mongo-shard1-a
+        image: mongo:8.0
+        command: mongod --shardsvr --replSet shard1RS --bind_ip_all --port 27018
+        networks:
+            - data4-components
+        volumes:
+            - ./mongo-data/shard1-a:/data/db
+
+    mongo-shard1-b:
+        container_name: mongo-shard1-b
+        image: mongo:8.0
+        command: mongod --shardsvr --replSet shard1RS --bind_ip_all --port 27018
+        networks:
+            - data4-components
+        volumes:
+            - ./mongo-data/shard1-b:/data/db
+
+    # 4. Shard 2
+    mongo-shard2-a:
+        container_name: mongo-shard2-a
+        image: mongo:8.0
+        command: mongod --shardsvr --replSet shard2RS --bind_ip_all --port 27018
+        networks:
+            - data4-components
+        volumes:
+            - ./mongo-data/shard2-a:/data/db
+
+    mongo-shard2-b:
+        container_name: mongo-shard2-b
+        image: mongo:8.0
+        command: mongod --shardsvr --replSet shard2RS --bind_ip_all --port 27018
+        networks:
+            - data4-components
+        volumes:
+            - ./mongo-data/shard2-b:/data/db
+
+    # 5. Shard 3
+    mongo-shard3-a:
+        container_name: mongo-shard3-a
+        image: mongo:8.0
+        command: mongod --shardsvr --replSet shard3RS --bind_ip_all --port 27018
+        networks:
+            - data4-components
+        volumes:
+            - ./mongo-data/shard3-a:/data/db
+
+    mongo-shard3-b:
+        container_name: mongo-shard3-b
+        image: mongo:8.0
+        command: mongod --shardsvr --replSet shard3RS --bind_ip_all --port 27018
+        networks:
+            - data4-components
+        volumes:
+            - ./mongo-data/shard3-b:/data/db
+
+networks:
+    data4-components:
+        external: true
+        name: data4-components

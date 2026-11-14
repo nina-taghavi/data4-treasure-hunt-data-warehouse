@@ -1,0 +1,29 @@
+docker exec -it sparkjupyter-data4 bash
+docker exec -u root -it sparkjupyter-data4 bash
+
+
+
+grep 10000 /proc/net/tcp
+
+mkdir -p /usr/local/spark/conf
+
+cat << 'EOF' > /usr/local/spark/conf/spark-defaults.conf
+spark.driver.host 0.0.0.0
+spark.driver.port 10000
+spark.blockManager.port 10001
+spark.ui.port 4040
+EOF
+
+cat /usr/local/spark/conf/spark-defaults.conf
+
+apt-get update
+apt-get install -y iproute2
+
+
+ss -tulnp | grep 10000
+ss -tulnp | grep 10001
+
+Important: Spark will NOT open port 10000 until a Spark session starts
+
+
+

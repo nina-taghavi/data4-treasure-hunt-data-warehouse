@@ -1,0 +1,52 @@
+services:
+    postgres-data4:
+        container_name: postgres-data4
+        hostname: postgres-data4
+        image: postgres:17.6
+        mac_address: "c6:d8:da:94:7b:42"
+        environment:
+            POSTGRES_PASSWORD: data
+            LANG: en_US.utf8
+            PG_MAJOR: "17"
+            PG_VERSION: "17.6-1.pgdg13+1"
+            PGDATA: /var/lib/postgresql/data
+        volumes:
+            - postgres-data4:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        networks:
+            - data4-components
+        restart: "no"
+
+    pyspark-jupyter-data4:
+        container_name: sparkjupyter-data4
+        hostname: sparkjupyter-data4
+        build:
+            context: .
+            dockerfile: pysparkjupyter/Dockerfile
+        ports:
+            - "8888:8888"
+            - "4040:4040"
+            - "4041:4041"
+        volumes:
+            - ..:/home/jovyan/work
+        command: >
+            start-notebook.py
+            --NotebookApp.ip=0.0.0.0
+            --NotebookApp.port=8888
+            --NotebookApp.allow_origin='*'
+            --NotebookApp.allow_remote_access=True
+            --NotebookApp.websocket_compression_options=''
+            --allow-root
+            --PasswordIdentityProvider.hashed_password='argon2:$$argon2id$$v=19$$m=10240,t=10,p=8$$ytRWl+yXhDBZWMR0jC+O+g$$RY3TdzRMbnkf9IoK7bExKYTaqD25fxFfujab7m+s1xA'
+            --notebook-dir=/home/jovyan/work
+        networks:
+            - data4-components
+
+networks:
+    data4-components:
+        name: data4-components
+
+volumes:
+    postgres-data4:
+        name: postgres-data4-vol

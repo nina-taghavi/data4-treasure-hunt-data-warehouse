@@ -1,0 +1,47 @@
+# Spark & Warehouse Outputs
+*.parquet
+*.crc
+_SUCCESS
+parquet-*.log
+parquet.zip
+spark-warehouse/
+metastore_db/
+derby.log
+
+# Large SQL dumps (small .sql scripts elsewhere are committed)
+catchem-database/*.sql
+
+# Secrets / local config (commit a config.example.ini instead)
+config.ini
+**/config.ini
+.env
+
+# Local archives of project folders
+task4.zip
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# PyCharm / IntelliJ / VS Code
+.idea/
+.junie
+.vscode/
+
+# macOS
+.DS_Store
+
+# Compressed database backups (shared via GitHub Release instead)
+*.sql.gz
+
+# MongoDB container data (Task 6)
+04-mongodb-nosql/mongo-data/
+
+# Spark outputs written next to notebooks
+output/
+checkpoints*/
